@@ -23,7 +23,7 @@ const Login: React.FC<LoginProps> = ({ handleLogin, handleRegister }) => {
   return (
     <div className="login-wrapper">
       <div className="login-card">
-        <h1 className="display-title" style={{ color: 'var(--primary)', textAlign: 'center', marginBottom: '0.25rem' }}>Lumina</h1>
+        <h1 className="display-title" style={{ color: 'var(--primary)', textAlign: 'center', marginBottom: '0.25rem' }}>STaMS</h1>
         <p className="text-muted" style={{ textAlign: 'center', marginBottom: '2.5rem' }}>Academic Task Management</p>
         
         <div className="role-tabs">

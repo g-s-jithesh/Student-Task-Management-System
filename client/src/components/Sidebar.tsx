@@ -13,7 +13,7 @@ const Sidebar: React.FC<SidebarProps> = ({ role, userName, activePage, setActive
   return (
     <div className="sidebar">
       <div className="brand">
-        Lumina <span className="text-muted" style={{ fontWeight: 400 }}>Academic</span>
+        STaMS <span className="text-muted" style={{ fontWeight: 400 }}>Academic</span>
       </div>
       <div className="nav-menu">
         <label className="label mb-4">Main Navigation</label>
