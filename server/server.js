@@ -191,6 +191,14 @@ app.put('/api/doubts/:id', authenticate, (req, res) => {
   });
 });
 
+// --- FACULTIES ---
+app.get('/api/faculties', authenticate, (req, res) => {
+  db.all("SELECT id, name FROM Users WHERE role = 'faculty'", [], (err, rows) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json(rows);
+  });
+});
+
 // --- NOTIFICATIONS ---
 app.get('/api/notifications', authenticate, (req, res) => {
   db.all('SELECT * FROM Notifications WHERE user_id = ? ORDER BY created_at DESC LIMIT 20', [req.user.id], (err, rows) => {
