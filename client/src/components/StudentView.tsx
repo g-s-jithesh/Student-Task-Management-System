@@ -18,9 +18,14 @@ const StudentView: React.FC<StudentViewProps> = ({ userName, stats, tasks, userT
   const [newDoubt, setNewDoubt] = useState('');
   const [notifications, setNotifications] = useState<any[]>([]);
   const [taskFilter, setTaskFilter] = useState<string>('all');
+  const [faculties, setFaculties] = useState<any[]>([]);
+  const [selectedFacultyId, setSelectedFacultyId] = useState<number | ''>('');
 
   useEffect(() => {
-    if (activePage === 's-doubts') fetchDoubts();
+    if (activePage === 's-doubts') {
+      fetchDoubts();
+      fetchFaculties();
+    }
     if (activePage === 's-notifications') fetchNotifications();
   }, [activePage]);
 
@@ -29,6 +34,14 @@ const StudentView: React.FC<StudentViewProps> = ({ userName, stats, tasks, userT
       const res = await fetch('http://localhost:5000/api/doubts', { headers: { 'Authorization': `Bearer ${userToken}` } });
       const data = await res.json();
       setDoubts(data);
+    } catch(e) { console.error(e); }
+  };
+
+  const fetchFaculties = async () => {
+    try {
+      const res = await fetch('http://localhost:5000/api/faculties', { headers: { 'Authorization': `Bearer ${userToken}` } });
+      const data = await res.json();
+      setFaculties(data);
     } catch(e) { console.error(e); }
   };
 
@@ -85,11 +98,17 @@ const StudentView: React.FC<StudentViewProps> = ({ userName, stats, tasks, userT
   };
 
   const raiseDoubt = async () => {
+    if (!selectedFacultyId) {
+      alert("Please select a faculty member to ask your doubt.");
+      return;
+    }
+    if (!newDoubt.trim()) return;
+
     try {
       await fetch('http://localhost:5000/api/doubts', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${userToken}` },
-        body: JSON.stringify({ question: newDoubt, teacher_id: 1 })
+        body: JSON.stringify({ question: newDoubt, teacher_id: selectedFacultyId })
       });
       setNewDoubt('');
       fetchDoubts();
@@ -243,6 +262,10 @@ const StudentView: React.FC<StudentViewProps> = ({ userName, stats, tasks, userT
       <div className="task-table-container">
         <h2 className="headline" style={{ fontSize: '1.25rem', marginBottom: '1.5rem' }}>Raise a Doubt</h2>
         <div className="flex gap-4 mb-4">
+          <select className="input-field" style={{ width: '200px' }} value={selectedFacultyId} onChange={e => setSelectedFacultyId(Number(e.target.value))}>
+            <option value="">Select Faculty</option>
+            {faculties.map(f => <option key={f.id} value={f.id}>{f.name}</option>)}
+          </select>
           <input type="text" className="input-field" placeholder="Ask your teacher something..." value={newDoubt} onChange={e => setNewDoubt(e.target.value)} />
           <button className="btn btn-primary" onClick={raiseDoubt}>Ask Doubt</button>
         </div>
